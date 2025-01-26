@@ -1,10 +1,11 @@
+# https://github.com/actions-rust-lang/setup-rust-toolchain
+name: ci
+
 on:
   pull_request:
   push:
     branches:
       - main
-
-name: ci
 
 jobs:
   fmt-clippy:
