@@ -1,0 +1,43 @@
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    volumes:
+      - "docker/init.sh:/etc/localstack/init/ready.d/init.sh"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  service_a:
+    build:
+      context: .
+      dockerfile: docker/service_a.Dockerfile
+    container_name: service_a
+    environment:
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=mock
+      - AWS_SECRET_ACCESS_KEY=mock
+    depends_on:
+      - localstack
+    ports:
+      - "8080:8080"
+    develop:
+      watch:
+        - action: rebuild
+          path: services/service_a
+
+  service_b:
+    build:
+      context: .
+      dockerfile: docker/service_b.Dockerfile
+    container_name: service_b
+    environment:
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=mock
+      - AWS_SECRET_ACCESS_KEY=mock
+    depends_on:
+      - localstack
+    develop:
+      watch:
+        - action: rebuild
+          path: services/service_b
