@@ -46,3 +46,11 @@ async fn main() -> std::io::Result<()> {
     .run()
     .await
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_service_a() {
+        assert_eq!(1 + 2, 3);
+    }
+}

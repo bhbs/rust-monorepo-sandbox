@@ -1,0 +1,38 @@
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+name: ci
+
+jobs:
+  fmt-clippy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain and cache
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+
+      - name: cargo fmt
+        run: cargo fmt --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --workspace -- -D clippy::unwrap_used -D clippy::unchecked_duration_subtraction
+
+      - name: Clippy of tests
+        run: cargo clippy --tests --workspace -- -D warnings
+
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain and cache
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+
+      - name: Tests
+        run: cargo test --workspace

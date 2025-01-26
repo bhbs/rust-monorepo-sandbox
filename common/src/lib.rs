@@ -14,3 +14,11 @@ pub struct MessageBody {
     pub Signature: String,
     pub SigningCertURL: String,
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_common() {
+        assert_eq!(1 + 2, 3);
+    }
+}

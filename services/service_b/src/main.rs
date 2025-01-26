@@ -83,3 +83,11 @@ async fn delete_message(
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_service_b() {
+        assert_eq!(1 + 2, 3);
+    }
+}
