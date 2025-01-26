@@ -16,11 +16,19 @@ jobs:
       matrix:
         include:
           - dockerfile: docker/service_a.Dockerfile
+            image: monorepo/service_a
           - dockerfile: docker/service_b.Dockerfile
+            image: monorepo/service_b
 
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ matrix.image }}
 
       - name: Build
         uses: docker/build-push-action@v6
