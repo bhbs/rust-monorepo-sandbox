@@ -11,7 +11,7 @@ services:
   service_a:
     build:
       context: .
-      dockerfile: docker/service_a.local.Dockerfile
+      dockerfile: docker/service_a.dev.Dockerfile
     container_name: service_a
     environment:
       - AWS_REGION=us-east-1
@@ -29,7 +29,7 @@ services:
   service_b:
     build:
       context: .
-      dockerfile: docker/service_b.local.Dockerfile
+      dockerfile: docker/service_b.dev.Dockerfile
     container_name: service_b
     environment:
       - AWS_REGION=us-east-1
