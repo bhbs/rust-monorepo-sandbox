@@ -18,4 +18,4 @@ COPY --from=builder /app/bin /usr/local/bin/service
 
 ENV RUST_LOG=info
 
-CMD service
+ENTRYPOINT ["service"]

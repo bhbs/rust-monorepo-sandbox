@@ -2,6 +2,7 @@ use std::{thread::sleep, time::Duration};
 
 use anyhow::Result;
 use common::{Message, MessageBody};
+use tokio::signal::unix::{signal, SignalKind};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -13,12 +14,23 @@ async fn main() -> Result<()> {
 
     let queue_url = "http://localstack:4566/000000000000/service_b_queue";
 
+    let mut sigterm = signal(SignalKind::terminate())?;
+
     loop {
-        if let Err(e) = handle_sqs_message(&sqs_client, queue_url).await {
-            eprintln!("Error handling SQS message: {:?}", e);
-            sleep(Duration::from_secs(5));
+        tokio::select! {
+            _ = sigterm.recv() => {
+                break;
+            },
+            result = handle_sqs_message(&sqs_client, queue_url) => {
+                if let Err(e) = result {
+                    eprintln!("Error handling SQS message: {:?}", e);
+                    sleep(Duration::from_secs(5))
+                }
+            }
         }
     }
+
+    Ok(())
 }
 
 async fn handle_sqs_message(sqs_client: &aws_sdk_sqs::Client, queue_url: &str) -> Result<()> {
